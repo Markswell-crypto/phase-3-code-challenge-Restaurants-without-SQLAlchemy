@@ -1,39 +1,69 @@
+from review import Review
+from restaurant import Restaurant
 class Customer:
-    
     all_customers = []
-    
-    def __init__(self, given_name, family_name):
-        self._given_name = given_name
-        self._family_name = family_name
-        Customer.all_customers.append(self)
-        
-    def set_given_name(self, new_given_name):
-        if (type(new_given_name) == str):
-            self._given_name = new_given_name
-        else:
-            print("The value must be a string.")
-            
-    def get_given_name(self):
-        return self._given_name
-    
-    _given_name = property(set_given_name, get_given_name)
 
-    def set_family_name(self, new_family_name):
-        if (type(new_family_name) == str):
-            self._family_name = new_family_name
-        else:
-            print("The value must be a string.")
-         
+    def _init_(self, given_name, family_name):
+        self.given_name = given_name
+        self.family_name = family_name
+        self._reviews = []
+        Customer.all_customers.append(self)
+
+    def get_given_name(self):
+        return self.given_name
+
     def get_family_name(self):
-        return self._family_name
-    
-    _family_name = property(get_family_name, set_family_name)
-    
-    def full_name(self):
-        return f"{self._given_name} {self._family_name}"
-    
+        return self.family_name
+
+    def get_full_name(self):
+        return f'{self.given_name} {self.family_name}'
+
+    def all(self):
+        return Customer.all_customers
+
+    # Object Relationship Methods
+    def add_review(self, restaurant, rating):
+        review = Review(self, restaurant, rating)
+        self._reviews.append(review)
+        restaurant.add_review(review)
+
+    def restaurants(self):
+        reviewed_restaurants = set()
+        for review in self._reviews:
+            reviewed_restaurants.add(review.restaurant())
+        return list(reviewed_restaurants)
+
+    # Aggregate and Association Methods
+    def num_reviews(self):
+        return len(self._reviews)
+
     @classmethod
-    def all(cls):
-        return cls.all_customers
-            
-  
+    def find_by_name(cls, full_name):
+        for customer in cls.all_customers:
+            if customer.get_full_name() == full_name:
+                return customer
+            else:
+                return None
+
+    @classmethod
+    def find_all_by_given_name(cls, given_name):
+        matching_customers = []
+        for customer in cls.all_customers:
+            if customer.get_given_name() == given_name:
+                matching_customers.append(customer)
+        return matching_customers
+
+
+# Example usage:
+# Create a customer
+customer1 = Customer("Joyce", "Mwangi")
+
+# Access customer information
+given_name = customer1.get_given_name()
+family_name = customer1.get_family_name()
+full_name = customer1.get_full_name()
+
+# Print customer details
+print("Given Name:", given_name)
+print("Family Name:", family_name)
+print("Full Name:", full_name)
