@@ -4,11 +4,17 @@ class Customer:
     all_customers = []
 
     def _init_(self, given_name, family_name):
+        self._validate_input(given_name, "given_name")
+        self._validate_input(family_name, "family_name")
         self.given_name = given_name
         self.family_name = family_name
         self._reviews = []
         Customer.all_customers.append(self)
 
+    def _validate_input(self, value, field_name):
+        if not isinstance(value, str):
+            raise ValueError(f"{field_name} must be a string")
+        
     def get_given_name(self):
         return self.given_name
 
@@ -16,7 +22,7 @@ class Customer:
         return self.family_name
 
     def get_full_name(self):
-        return f'{self.given_name} {self.family_name}'
+        return f"{self.given_name} {self.family_name}"
 
     def all(self):
         return Customer.all_customers
@@ -54,9 +60,9 @@ class Customer:
         return matching_customers
 
 
-# Example usage:
+# Test-case:
 # Create a customer
-customer1 = Customer("Joyce", "Mwangi")
+customer1 = Customer("Markswell", "Ogutu")
 
 # Access customer information
 given_name = customer1.get_given_name()
